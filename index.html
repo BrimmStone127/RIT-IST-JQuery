@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ClayBrimm - Project2</title>
+
+	<!--Clayton Brimm Client Programming Project 2 -->
+
+  	<!-- STYLES -->
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" href="css/zebra_dialog.css" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	
+	
+	<!--Scripts-->
+	<script type="text/javascript" src="javascripts/vendor/modernizr.custom.js"></script>
+	<script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+	<script src="js/modernizr.custom.97074.js"></script>
+	<script type="text/javascript" src="js/zebra_dialog.js"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+        
+        //ABOUT (intro)
+		myXhr('get',{path:'/about/'},'#about').done(function(json){
+				var x="<h2>"+json.title+"</h2>";
+				x+="<p>"+json.description+"</p>";
+				x+="<p>"+json.quote+"</p>";
+				x+="<p>"+json.quoteAuthor+"</p>";
+				$('#about').append(x);
+		});
+		
+        //UNDERGRAD DEGREES - take everything from the api and put it in the appropriate class in the majors/careers section
+		myXhr('get',{path:'/degrees/undergraduate/'},'#under').done(function(json){
+			$.each(json.undergraduate,function(i, item){
+				var check= item.degreeName;
+				var x="<h2>"+item.title+"</h2></br><p>"+item.description+"</p>";
+				var w="";
+                if(check == "wmc"){
+                	$('#wmcDesc').append(x);
+                	w+="<h2>Concentrations</h2><ul><li>"+item.concentrations[0]+"</li><li>"+item.concentrations[1]+"</li><li>"+item.concentrations[2]+"</li><li>"+item.concentrations[3]+"</li></ul>";
+                	$('#wmcDesc').append(w);
+                }
+                if(check == "hcc"){
+                	$('#hccDesc').append(x);
+                	w+="<h2>Concentrations</h2><ul><li>"+item.concentrations[0]+"</li><li>"+item.concentrations[1]+"</li><li>"+item.concentrations[2]+"</li><li>"+item.concentrations[3]+"</li><li>"+item.concentrations[4]+"</li><li>"+item.concentrations[5]+"</li></ul>";
+                	$('#hccDesc').append(w);
+                }
+                if(check == "cit"){
+                	$('#citDesc').append(x);
+                	w+="<h2>Concentrations</h2><ul><li>"+item.concentrations[0]+"</li><li>"+item.concentrations[1]+"</li><li>"+item.concentrations[2]+"</li><li>"+item.concentrations[3]+"</li><li>"+item.concentrations[4]+"</li></ul>";
+                	$('#citDesc').append(w);
+                }
+			});
+		});
+        
+        /*Grad Degrees*/
+		myXhr('get',{path:'/degrees/graduate/'},'#grad').done(function(json){
+			$.each(json.graduate,function(i, item){
+				var check= item.degreeName;
+				var x="<h2>"+item.title+"</h2></br><p>"+item.description+"</p>";
+				var w="";
+                if(check == "ist"){
+                	$('#istDesc').append(x);
+                	w+="<h2>Concentrations</h2><ul><li>"+item.concentrations[0]+"</li><li>"+item.concentrations[1]+"</li><li>"+item.concentrations[2]+"</li></ul>";
+                	$('#istDesc').append(w);
+                }
+                if(check == "hci"){
+                	$('#hciDesc').append(x);
+                	w+="<h2>Concentrations</h2><ul><li>"+item.concentrations[0]+"</li><li>"+item.concentrations[1]+"</li><li>"+item.concentrations[2]+"</li><li>"+item.concentrations[3]+"</li><li>"+item.concentrations[4]+"</li><li>"+item.concentrations[5]+"</li></ul>";
+                	$('#hciDesc').append(w);
+                }
+                if(check == "nsa"){
+                	$('#nsaDesc').append(x);
+                	w+="<h2>Concentrations</h2><ul><li>"+item.concentrations[0]+"</li><li>"+item.concentrations[1]+"</li><li>"+item.concentrations[2]+"</li></ul>";
+                	$('#nsaDesc').append(w);
+                }
+                if(check == "graduate advanced certificates"){
+                	$('#gacDesc').append(x);
+                	w+="<h2>Available Certificates</h2><ul><li>"+item.availableCertificates[0]+"</li><li>"+item.availableCertificates[1]+"</li></ul>";
+                	$('#gacDesc').append(w);
+                }
+			});
+		});
+
+
+        //PEOPLE (faculty/staff)
+		myXhr('get',{path:'/people/'},'#staff').done(function(json){
+			// do something...
+			var num = 0;
+			var number = 0;
+			$.each(json.faculty,function(i, item){
+				num++;
+				number++;
+           		var x='';
+           		x+='<h3>'+item.name+'</h3><p>'+item.title+'</p>';
+           		place = "#staff";
+           		place = place + num.toString();
+           		$(place).append(x);
+           		var y='';
+           		y+='<img src='+item.imagePath+' style="float:left;">';
+           		y+='<ul><li>'+item.name+'</li><li>'+item.tagline+'</li><li>'+item.username+'</li><li>'+item.titel+'</li><li>Areas of interest: '+item.interestArea+'</li><li>'+item.office+'</li><li>'+item.phone+'</li><li>'+item.email+'</li><li>'+item.twitter+'</li><li>'+item.facebook+'</li></ul>';
+           		place2 = "#stuff";
+           		place2 = place2 + number.toString();
+           		$(place2).append(y);
+			});
+			var num2 = 0;
+			var number2 = 0;
+			$.each(json.staff,function(i, item){
+				num2++;
+				number2++;
+           		var x='';
+           		x+='<h3>'+item.name+'</h3><p>'+item.title+'</p>';
+           		place = "#staf";
+           		place = place + num2.toString();
+           		$(place).append(x);
+           		var y='';
+           		y+='<img src='+item.imagePath+' style="float:left;">';
+           		y+='<ul><li>'+item.name+'</li><li>'+item.tagline+'</li><li>'+item.username+'</li><li>'+item.titel+'</li><li>Areas of interest: '+item.interestArea+'</li><li>'+item.office+'</li><li>'+item.phone+'</li><li>'+item.email+'</li><li>'+item.twitter+'</li><li>'+item.facebook+'</li></ul>';
+           		place2 = "#stuf";
+           		place2 = place2 + number2.toString();
+           		$(place2).append(y);
+			});
+		});
+        
+        /*Research Section - goes into the faculty and staff section*/
+		myXhr('get',{path:'/research/'},'#research').done(function(json){
+			var num3 = 0;
+			var number3 =0;
+			$.each(json.byFaculty,function(i,item){
+				num3++;
+				number3++;
+				var x='';
+				x+='<h3>'+item.facultyName+'</h3>';
+				place = "#facu";
+				place = place + num3.toString();
+				console.log(place, x);
+				$(place).append(x);
+				var y='';
+				y+='<h1>Citations</h1>';
+				$.each(item.citations,function(j,jtem){
+					y+='<p>'+jtem+'</p>';
+					console.log(jtem);
+				});
+				place2 = "#facult";
+				place2 = place2 + number3.toString();
+				$(place2).append(y);
+			});
+			var num4 = 0;
+			var number5 =0;
+			$.each(json.byInterestArea,function(i,item){
+				num4++;
+				number5++
+				var x2 ='';
+				var y2 ='';
+				x2+='<h3>'+item.areaName+'</h3>';
+				place3 = "#intere";
+				place3 = place3 + num4.toString();
+				$(place3).append(x2);
+				$.each(item.citations,function(j,jtem){
+					y2+='<p>'+jtem+'</p>';
+				});
+				place4 = "#inter";
+				place4 = place4 + number5.toString();
+				$(place4).append(y2);
+			});
+		});
+        
+        //UNDERGRAD MINORS
+        myXhr('get',{path:'/minors/UgMinors/'},'#minors').done(function(json){
+            var x='';
+            $.each(json.UgMinors,function(i,item){
+                $('#minors').append('<h2>'+item.name+'</h2><h3>'+item.title+'</h3><h4>'+item.description+'</h4><h4>'+item.courses+'</h4>');
+            })
+        });
+        
+        //EMPLOYMENT (NEEDS MAP)
+        myXhr('get',{path:'/employment/'},'#Empintro').done(function(json){
+        	var x ='';
+        	x+='<h1>'+json.introduction.title+'</h1>';
+        	x+='<h3>'+json.introduction.content[0].title+'</h3><p>'+json.introduction.content[0].description+'</p><h3>'+json.introduction.content[1].title+'</h3><p>'+json.introduction.content[1].description+'</p>';
+        	$('#Empintro').append(x);
+        	var y ='';
+        	y+='<h3>'+json.employers.title+'</h3>';
+        	y+='<h4>';
+        	$.each(json.employers.employerNames,function(i,item){
+        		y+=item+', ';
+        	})
+        	y+='</h4>';
+        	y+='<h3>'+json.careers.title+'</h3>';
+        	y+='<h4>';
+        	$.each(json.careers.careerNames,function(i,item){
+        		y+=item+', ';
+        	})
+        	y+='</h4>';
+        	$('#Empintro').append(y);
+        	
+        	var z='';
+            z += '<table id = "coop" class="display" cellspacing="0" width="100%">';
+            z+='<thead><tr><th>Employer</th><th>Degree</th><th>City</th><th>Term</th></tr></thead><tfoot><tr><th>Employer</th><th>Degree</th><th>City</th><th>Term</th></tr></tfoot>';
+ 			z+='<tbody>';
+            $.each(json.coopTable.coopInformation,function(i,item){
+            	z+='<tr><td>'+item.employer+'</td><td>'+item.degree+'</td><td>'+item.city+'</td><td>'+item.term+'</td></tr>';
+            })
+            z+='</tbody>';
+            z+='</table>';
+        	$('#coopTab').append(z);			
+			
+        	var j='';
+        	
+            j += '<table id = "job" class="display" cellspacing="0" width="100%">';
+            j+='<thead><tr><th>Employer</th><th>Degree</th><th>City</th><th>Title</th><th>Start Date</th></tr></thead><tfoot><tr><th>Employer</th><th>Degree</th><th>City</th><th>Title</th><th>Start Date</th></tr></tfoot>';
+      		j+='<tbody>';
+            $.each(json.employmentTable.professionalEmploymentInformation,function(i,item){
+              j+='<tr><td>'+item.employer+'</td><td>'+item.degree+'</td><td>'+item.city+'</td><td>'+item.title+'</td><td>'+item.startDate+'</td></tr>';
+            })
+            j+='</tbody>';
+            j+='</table>';
+          	$('#jobTab').append(j);
+          	
+
+             });
+
+        
+        //GENERAL INFO study abroad, student ambassadors ect.
+        myXhr('get',{path:'/resources/'},'#resource').done(function(json){
+            var x = '';
+            x+='<h1>'+json.studyAbroad.description+'</h1>';
+            $.each(json.studyAbroad.places,function(i,item){
+            	x+='<h3>'+item.nameOfPlace+'</h3>';
+            	x+='<h4>'+item.description+'</h3>';
+            })
+            $('#abroad').append(x);
+            var y ='';
+            y+='<h2>'+json.studentServices.academicAdvisors.title+'</h2>';
+            y+='<p>'+json.studentServices.academicAdvisors.description+'</p>';
+            y+='<a href="'+json.studentServices.academicAdvisors.faq.contentHref+'">AdvisingFaq</a>';
+            y+='<h2>Professonal Advisors</h2>';
+            y+='<ul>';
+            $.each(json.studentServices.professonalAdvisors.advisorInformation,function(i,item){
+            	y+='<li>'+item.name+'</li><li>'+item.department+'</li><li>'+item.email+'</li></br>';
+            })
+            y+='</ul>';
+            y+='<h2>Faculty Advisors</h2>';
+            y+='<p>'+json.studentServices.facultyAdvisors.description+'</p>';
+            y+='<h2>IST Minor Advising</h2>';
+            $.each(json.studentServices.istMinorAdvising.minorAdvisorInformation,function(i,item){
+            	y+='<h3>'+item.title+'</h3><h4>'+item.advisor+'</h4><h4>'+item.email+'</h4>';
+            })
+            $('#advising').append(y);
+            var z='';
+            z+='<h2>Tutors / Lab Information</h2>';
+            z+='<p>'+json.tutorsAndLabInformation.description+'</p>';
+            z+='<a href="'+json.tutoringLabHoursLink+'"></a>';
+            $('#tutors').append(z);
+            var a='';
+            a+='<h2>Student Ambassador Information and Application</h2>';
+            a+='<img src="'+json.studentAmbassadors.ambassadorsImageSource+'">';
+            $.each(json.studentAmbassadors.subSectionContent,function(i,item){
+            	a+='<h3>'+item.title+'</h3><p>'+item.description+'</p>';
+            })
+            a+='<a href="'+json.studentAmbassadors.applicationFormLink+'"></a>';
+            a+='<p>'+json.studentAmbassadors.note+'</p>';
+            $('#ambass').append(a);
+            var b='';
+            b+='<h1>Graduate Forms</h1>';
+            $.each(json.forms.graduateForms,function(i,item){
+            	b+='<a href="'+item.href+'">'+item.formName+'</a>';
+            })
+            b+='<h1>Undergraduate Forms</h1>';
+            $.each(json.forms.undergraduateForms,function(i,item){
+            	b+='<a href="'+item.href+'">'+item.formName+'</a>';
+            })
+            $('#forms').append(b);
+            var c='';
+            c+='<h2>Co-op Enrollment</h2>';
+            $.each(json.coopEnrollment.enrollmentInformationContent,function(i,item){
+            	c+='<h4>'+item.title+'</h4>';
+            	c+='<p>'+item.description+'</p>';
+            })
+            c+='<a href="'+json.coopEnrollment.RITJobZoneGuideLink+'"></a>';
+            $('#enroll').append(c);
+        });
+        
+        //IST dept. news filtered by this year and older
+        myXhr('get',{path:'/news/'},'#news').done(function(json){
+            var x='';
+            $.each(json.year,function(i,item){
+            	x+='<h4>'+item.date+'</h4>';
+            	x+='<h3>'+item.title+'</h3>';
+            	x+='<p>'+item.title+'</p>';
+            })
+            $('#news').append(x);
+            var y='';
+            $.each(json.older,function(i,item){
+            	y+='<h4>'+item.date+'</h4>';
+            	y+='<h3>'+item.title+'</h3>';
+            	y+='<p>'+item.title+'</p>';
+            })
+            $('#news2').append(y);
+        });
+        
+        //The links required for a sites footer
+        myXhr('get',{path:'/footer/'},'#footer').done(function(json){
+        	var x ='';
+        	x+='<p>'+json.social.title+'</p>';
+        	x+='<p>'+json.social.tweet+'</p>';
+        	x+='<p>'+json.social.by+'</p>';
+        	x+='<a href='+json.social.twitter+'>Twitter</a>';
+        	x+='<a href='+json.social.facebook+'>Facebook</a>';
+        	$('#ffoot').append(x);
+        	var y='';
+        	y+='<ul>'
+        	$.each(json.quickLinks,function(i,item){
+        		y+='<li><a href="'+item.href+'">'+item.title+'</a>';
+        	})
+        	y+='</ul>'
+        	$('#ffoot').append(y);
+        	$('#ffoot').append(json.copyright.html);
+
+        });
+
+
+		
+	});
+	
+	
+	function getFac(dom){
+		myXhr('get',{path:'/people/faculty/username='+$(dom).attr('data-username')},null).done(function(json){
+			console.log(json);
+		});
+	}
+	
+	function myXhr(t, d, id){
+		return $.ajax({
+			type:t,
+			url:'proxy.php',
+			dataType:'json',
+			data:d,
+			cache:false,
+			async:true,
+			beforeSend:function(){
+				//PLEASE - get your own spinner that 'fits' your site.
+				$(id).append('<img src="gears.gif" class="spin"/>');
+			}
+		}).always(function(){
+			//kill spinner
+			$(id).find('.spin').fadeOut(5000,function(){
+				$(this).remove();
+			});
+		}).fail(function(){
+			//handle failure
+		});
+	}  
+
+</script>
+    
+</head>
+
+<body>  
+    <div id = "container">
+    	<div id = "about" class = "about"><!--INTRO ABOUT-->
+    		<div class="wrap">
+    			<div id="main-header" class="fixed-header">
+				  <nav>
+				    <h1>Rochester Institute of Technology - Information Science and Technologies</h1>
+				  </nav>
+				</div>
+				<!--Side Navivation -->
+    			<div id="main-header" class="side-menu">
+				  <nav>
+				    <ul>
+				      <li><a href="#about">About</a></li>
+				      <li><a href="#majors">Majors/Careers</a></li>
+				      <li><a href="#people">Faculty/Staff</a></li>
+				      <li><a href="#resources">Student Resources</a></li>
+				    </ul>
+				  </nav>
+				</div>
+    			<section id="about"></section>
+    		</div>
+  		</div>
+		
+  		<div id = "majors" class = "majors"><!--GRAD/UNDERGRAD with minors and majors as well as employment info-->
+  			<div class="wrap">
+  			    <div id="main-header" class="side-menu"><!--Side Nav-->
+				  <nav>
+				    <ul>
+				      <li><a href="#about">About</a></li>
+				      <li><a href="#majors">Majors/Careers</a></li>
+				      <li><a href="#people">Faculty/Staff</a></li>
+				      <li><a href="#resources">Student Resources</a></li>
+				    </ul>
+				  </nav>
+				</div>
+  				<section id="school"></section>
+  			</div>
+			<!--Drop down for more information on majors-->
+			<section>
+			    <div class="container">
+			      <div class="row">
+			        <div class="twelve columns">
+			          <article>
+			            <h4>Majors/Careers</h4>
+			            <div class='tabs tabs_animate'>
+			              <ul class='horizontal'>
+			                <li><a href="#tab-1">Undergraduate</a></li>
+			                <li><a href="#tab-2">Graduate</a></li>
+			                <li><a href="#tab-3">Careers</a></li>
+			                <li><a href="#tab-4">Co-op Table</a></li>
+			                <li><a href="#tab-5">Career Table</a></li>
+			              </ul>
+			              <div id='tab-1'><span><div id ="under">
+						    <ul class="dropdown">
+						      <li>
+						        <a class="wmc" href="">WMC</a>
+						        <ul>
+						          <li><section id="wmcDesc"></section></li>
+						        </ul>
+						      </li>
+						      <li>
+						        <a class="hcc" href="">HCC</a>
+						        <ul>
+						          <li><section id="hccDesc"></section></li>
+						        </ul>
+						      </li>
+						      <li>
+						        <a class="cit" href="">CIT</a>
+						        <ul>
+						          <li><section id="citDesc"></section></li>
+						        </ul>
+						      </li>
+						      <li>
+						        <a class="minor" href="">Undergraduate Minors</a>
+						        <ul>
+						          <li><section id="minors"></section></li>
+						        </ul>
+						      </li>
+						    </ul></div></span></div>
+			              <div id='tab-2'><span><div id ="grad">
+			              	<ul class ="dropdown2">
+			              		<li>
+						        <a class="ist" href="">IST</a>
+						        <ul>
+						          <li><section id="istDesc"></section></li>
+						        </ul>
+						      </li>
+						      <li>
+						        <a class="hci" href="">HCI</a>
+						        <ul>
+						          <li><section id="hciDesc"></section></li>
+						        </ul>
+						      </li>
+						      <li>
+						        <a class="nsa" href="">NSA</a>
+						        <ul>
+						          <li><section id="nsaDesc"></section></li>
+						        </ul>
+						      </li>
+						      <li>
+			              	</ul></div></span></div>
+			              <div id='tab-3'><span><div id="career">
+			              	<section id="Empintro"></section>
+				        	<div class="contain">
+						      <h1>Degree Statistics</h1>
+						      <dl class="gridtab-1">
+						        <dt><h1>$80,000</h1></dt>
+						        <dd><h2>Average salary with one of our degrees (glassdoor.com)</h2></dd>
+						        <dt><h1>36th</h1></dt>
+						        <dd><h2>Rank among the Top 50 Best Computing Colleges in the U.S. (businessinsider.com)</h2></dd>
+						        <dt><h1>35</h1></dt>
+						        <dd><h2>Percent of all of the web traffic used by mobile devices in the U.S. (thenextweb.com)</h2></dd>
+						        <dt><h1>1.11 Billion GB</h1></dt>
+						        <dd><h2>Information in the form of internet traffic in 24 hours (mbaonline.com)</h2></dd>
+						      </dl>
+						      <hr>   
+						    </div>
+						    <!--Map-->
+			              	<div id="map-div">
+							  <iframe id="map-iframe"
+							    src="https://ist.rit.edu/api/map/" 
+								width="100%" height="600px">
+								<p>Your browser does not showing this map.
+									Obviously you are using an old browser.</br>
+								</p>
+							  </iframe>
+							</div>
+			              </div></span></div>
+			              <!--Tables-->
+			              <div id='tab-4'><span><div id="coopTable">
+			              	<section id="coopTab"></section>
+				        	<div class="contain">
+			              </div></span></div>
+			            </div>
+			            <div id='tab-5'><span><div id="jobTable">
+			              	<section id="jobTab"></section>
+				        	<div class="contain">
+			              </div></span></div>
+			            </div>
+			</article></div></div></div></section>
+
+  		</div>
+
+  		<div id = "people" class = "people"><!--Faculty and Staff and research-->
+  			<div class="wrap">
+  				<div id="main-header" class="side-menu">
+				  <nav>
+				    <ul>
+				      <li><a href="#about">About</a></li>
+				      <li><a href="#majors">Majors/Careers</a></li>
+				      <li><a href="#people">Faculty/Staff</a></li>
+				      <li><a href="#resources">Student Resources</a></li>
+				    </ul>
+				  </nav>
+				</div>
+  				<div class="contain">
+			      <h1>Our People</h1>
+			      <h2>Faculty</h2>
+			      <dl class="gridtab-1"><!--Faculty Staff and research tabs-->
+			        <dt><div id ="staff1"></div></dt>
+			        <dd><div id ="stuff1"></div></dd>
+			        <dt><div id ="staff2"></div></dt>
+			        <dd><div id ="stuff2"></div></dd>
+			        <dt><div id ="staff3"></div></dt>
+			        <dd><div id ="stuff3"></div></dd>
+			        <dt><div id ="staff4"></div></dt>
+			        <dd><div id ="stuff4"></div></dd>
+			        <dt><div id ="staff5"></div></dt>
+			        <dd><div id ="stuff5"></div></dd>
+			        <dt><div id ="staff6"></div></dt>
+			        <dd><div id ="stuff6"></div></dd>
+			        <dt><div id ="staff7"></div></dt>
+			        <dd><div id ="stuff7"></div></dd>
+			        <dt><div id ="staff8"></div></dt>
+			        <dd><div id ="stuff8"></div></dd>
+			        <dt><div id ="staff9"></div></dt>
+			        <dd><div id ="stuff9"></div></dd>
+			        <dt><div id ="staff10"></div></dt>
+			        <dd><div id ="stuff10"></div></dd>
+			        <dt><div id ="staff11"></div></dt>
+			        <dd><div id ="stuff11"></div></dd>
+			        <dt><div id ="staff12"></div></dt>
+			        <dd><div id ="stuff12"></div></dd>
+			        <dt><div id ="staff13"></div></dt>
+			        <dd><div id ="stuff13"></div></dd>
+			        <dt><div id ="staff14"></div></dt>
+			        <dd><div id ="stuff14"></div></dd>
+			        <dt><div id ="staff15"></div></dt>
+			        <dd><div id ="stuff15"></div></dd>
+			        <dt><div id ="staff16"></div></dt>
+			        <dd><div id ="stuff16"></div></dd>
+			        <dt><div id ="staff17"></div></dt>
+			        <dd><div id ="stuff17"></div></dd>
+			        <dt><div id ="staff18"></div></dt>
+			        <dd><div id ="stuff18"></div></dd>
+			        <dt><div id ="staff19"></div></dt>
+			        <dd><div id ="stuff19"></div></dd>
+			        <dt><div id ="staff20"></div></dt>
+			        <dd><div id ="stuff20"></div></dd>
+			        <dt><div id ="staff21"></div></dt>
+			        <dd><div id ="stuff21"></div></dd>
+			        <dt><div id ="staff22"></div></dt>
+			        <dd><div id ="stuff22"></div></dd>
+			        <dt><div id ="staff23"></div></dt>
+			        <dd><div id ="stuff23"></div></dd>
+			        <dt><div id ="staff24"></div></dt>
+			        <dd><div id ="stuff24"></div></dd>
+			        <dt><div id ="staff25"></div></dt>
+			        <dd><div id ="stuff25"></div></dd>
+			        <dt><div id ="staff26"></div></dt>
+			        <dd><div id ="stuff26"></div></dd>
+			        <dt><div id ="staff27"></div></dt>
+			        <dd><div id ="stuff27"></div></dd>
+			        <dt><div id ="staff28"></div></dt>
+			        <dd><div id ="stuff28"></div></dd>
+			        <dt><div id ="staff29"></div></dt>
+			        <dd><div id ="stuff29"></div></dd>
+			        <dt><div id ="staff30"></div></dt>
+			        <dd><div id ="stuff30"></div></dd>
+			        <dt><div id ="staff31"></div></dt>
+			        <dd><div id ="stuff31"></div></dd>
+			        <dt><div id ="staff32"></div></dt>
+			        <dd><div id ="stuff32"></div></dd>
+			      </dl>
+			      <hr>   
+			    </div>
+			    <div class="contain">
+			      <h2>Staff</h2>
+			      <dl class="gridtab-1">
+			        <dt><div id ="staf1"></div></dt>
+			        <dd><div id ="stuf1"></div></dd>
+			        <dt><div id ="staf2"></div></dt>
+			        <dd><div id ="stuf2"></div></dd>
+			        <dt><div id ="staf3"></div></dt>
+			        <dd><div id ="stuf3"></div></dd>
+			        <dt><div id ="staf4"></div></dt>
+			        <dd><div id ="stuf4"></div></dd>
+			        <dt><div id ="staf5"></div></dt>
+			        <dd><div id ="stuf5"></div></dd>
+			        <dt><div id ="staf6"></div></dt>
+			        <dd><div id ="stuf6"></div></dd>
+			        <dt><div id ="staf7"></div></dt>
+			        <dd><div id ="stuf7"></div></dd>
+			        <dt><div id ="staf8"></div></dt>
+			        <dd><div id ="stuf8"></div></dd>
+			        <dt><div id ="staf9"></div></dt>
+			        <dd><div id ="stuf9"></div></dd>
+			        <dt><div id ="staf10"></div></dt>
+			        <dd><div id ="stuf10"></div></dd>
+			        <dt><div id ="staf11"></div></dt>
+			        <dd><div id ="stuf11"></div></dd>
+			        <dt><div id ="staf12"></div></dt>
+			        <dd><div id ="stuf12"></div></dd>
+			      </dl>
+			      <hr>   
+			    </div>
+			    <div class="contain">
+			      <h2>Research by Faculty</h2>
+			      <dl class="gridtab-1">
+			        <dt><div id ="facu1"></div></dt>
+			        <dd><div id ="facult1"></div></dd>
+			        <dt><div id ="facu2"></div></dt>
+			        <dd><div id ="facult2"></div></dd>
+			        <dt><div id ="facu3"></div></dt>
+			        <dd><div id ="facult3"></div></dd>
+			        <dt><div id ="facu4"></div></dt>
+			        <dd><div id ="facult4"></div></dd>
+			        <dt><div id ="facu5"></div></dt>
+			        <dd><div id ="facult5"></div></dd>
+			        <dt><div id ="facu6"></div></dt>
+			        <dd><div id ="facult6"></div></dd>
+			        <dt><div id ="facu7"></div></dt>
+			        <dd><div id ="facult7"></div></dd>
+			        <dt><div id ="facu8"></div></dt>
+			        <dd><div id ="facult8"></div></dd>
+			        <dt><div id ="facu9"></div></dt>
+			        <dd><div id ="facult9"></div></dd>
+			        <dt><div id ="facu10"></div></dt>
+			        <dd><div id ="facult10"></div></dd>
+			        <dt><div id ="facu11"></div></dt>
+			        <dd><div id ="facult11"></div></dd>
+			        <dt><div id ="facu12"></div></dt>
+			        <dd><div id ="facult12"></div></dd>
+			        <dt><div id ="facu13"></div></dt>
+			        <dd><div id ="facult13"></div></dd>
+			        <dt><div id ="facu14"></div></dt>
+			        <dd><div id ="facult14"></div></dd>
+			        <dt><div id ="facu15"></div></dt>
+			        <dd><div id ="facult15"></div></dd>
+			        <dt><div id ="facu16"></div></dt>
+			        <dd><div id ="facult16"></div></dd>
+			        <dt><div id ="facu17"></div></dt>
+			        <dd><div id ="facult17"></div></dd>
+			        <dt><div id ="facu18"></div></dt>
+			        <dd><div id ="facult18"></div></dd>
+			        <dt><div id ="facu19"></div></dt>
+			        <dd><div id ="facult19"></div></dd>
+			        <dt><div id ="facu20"></div></dt>
+			        <dd><div id ="facult20"></div></dd>
+			      </dl>
+			      <hr>   
+			    </div>
+
+			    <div class="contain">
+			      <h2>Research by Topic</h2>
+			      <dl class="gridtab-1">
+			        <dt><div id ="intere1"></div></dt>
+			        <dd><div id ="inter1"></div></dd>
+			        <dt><div id ="intere2"></div></dt>
+			        <dd><div id ="inter2"></div></dd>
+			        <dt><div id ="intere3"></div></dt>
+			        <dd><div id ="inter3"></div></dd>
+			        <dt><div id ="intere4"></div></dt>
+			        <dd><div id ="inter4"></div></dd>
+			        <dt><div id ="intere5"></div></dt>
+			        <dd><div id ="inter5"></div></dd>
+			        <dt><div id ="intere6"></div></dt>
+			        <dd><div id ="inter6"></div></dd>
+			        <dt><div id ="intere7"></div></dt>
+			        <dd><div id ="inter7"></div></dd>
+			        <dt><div id ="intere8"></div></dt>
+			        <dd><div id ="inter8"></div></dd>
+			        <dt><div id ="intere9"></div></dt>
+			        <dd><div id ="inter9"></div></dd>
+			        <dt><div id ="intere10"></div></dt>
+			        <dd><div id ="inter10"></div></dd>
+			        <dt><div id ="intere11"></div></dt>
+			        <dd><div id ="inter11"></div></dd>
+			        <dt><div id ="intere12"></div></dt>
+			        <dd><div id ="inter12"></div></dd>
+			      </dl>
+			      <hr>   
+			    </div>
+
+
+  			</div>
+  		</div>
+
+  		<div id = "resources" class = "resources"><!--Resources-->
+  			<div class="wrap">
+		<div id="main-header" class="side-menu">
+				  <nav>
+				    <ul>
+				      <li><a href="#about">About</a></li>
+				      <li><a href="#majors">Majors/Careers</a></li>
+				      <li><a href="#people">Faculty/Staff</a></li>
+				      <li><a href="#resources">Student Resources</a></li>
+				    </ul>
+				  </nav>
+				</div>
+				<section>
+			    <div class="container">
+			      <div class="row">
+			        <div class="twelve columns">
+			          <article>
+			            <h4>Student Resources</h4>
+			            <div class='tabs tabs_animate'>
+			              <ul class='horizontal'>
+			                <li><a href="#tab-1a">Study Abroad</a></li>
+			                <li><a href="#tab-2a">Student Services</a></li>
+			                <li><a href="#tab-3a">Lab Info</a></li>
+			                <li><a href="#tab-4a">Student Ambassadors</a></li>
+			                <li><a href="#tab-5a">Forms</a></li>
+			                <li><a href="#tab-6a">Co-op Enrollment</a></li>
+			                <li><a href="#tab-7a">Recent News</a></li>
+			                <li><a href="#tab-8a">Past News</a></li>
+			              </ul>
+			              <div id='tab-1a'><span><div id ="abroad">
+						  </div></span></div>
+			              <div id='tab-2a'><span><div id ="advising">
+			              </div></span></div>
+			              <div id='tab-3a'><span><div id ="tutors">
+			              </div></span></div>
+			              <div id='tab-4a'><span><div id ="ambass">
+			              </div></span></div>
+			              <div id='tab-5a'><span><div id ="forms">
+			              </div></span></div>
+			              <div id='tab-6a'><span><div id ="enroll">
+			              </div></span></div>	
+			              <div id='tab-7a'><span><div id ="news">
+			              </div></span></div>
+			              <div id='tab-8a'><span><div id ="news2">
+			              </div></span></div>	
+			            </div>
+			</article></div></div></div></section>			
+  			</div>
+  		</div>
+
+  		<div id="foot" class="foot">
+			<section id="feet"></section>
+  		</div>
+  				<div id="main-header" class="fixed-footer">
+				  <nav>
+				    <section id = "ffoot"></section>
+				  </nav>
+				</div>
+  	</div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="js/libs/jquery-1.8.1.min.js"><\/script>')</script>
+	<script src="js/scrollTo.min.js"></script>
+	<script src="js/jquery.easing.min.js"></script>
+	<script src="js/jquery.fullContent.min.js"></script>
+	<script type="text/javascript">
+		$('#container').fullContent({
+		    stages: 'div',
+		    mapPosition: [{v: 1, h: 3}, {v: 1, h: 1}, {v: 1, h: 6}, {v: 3, h: 3}],
+		    stageStart: 1,
+		    idComplement: 'page_',
+		    ease: 'easeOutQuad'
+		});
+
+		var elm = document.querySelector('#main-header');
+    	var ms = new MenuSpy(elm);
+	</script>
+	<script src="js/menuspy.js"></script>
+ 	<script>
+   		var elm = document.querySelector('#main-header');
+    	var ms = new MenuSpy(elm);
+  	</script>
+  	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/tendina.min.js"></script>
+    <script>
+      $('.dropdown').tendina({
+        animate: true,
+        speed: 500,
+        onHover: false,
+        hoverDelay: 300,
+        activeMenu: $('#deepest'),
+        openCallback: function(clickedEl) {
+          console.log('Hey dude!');
+        },
+        closeCallback: function(clickedEl) {
+          console.log('Bye dude!');
+        }
+      })
+      $('.dropdown2').tendina({
+        animate: true,
+        speed: 500,
+        onHover: false,
+        hoverDelay: 300,
+        activeMenu: $('#deepest'),
+        openCallback: function(clickedEl) {
+          console.log('Hey dude!');
+        },
+        closeCallback: function(clickedEl) {
+          console.log('Bye dude!');
+        }
+      })
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  	<script>window.jQuery || document.write('<script src="javascripts/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+  	<script type="text/javascript" src="javascripts/vendor/jquery.tabslet.min.js"></script>
+  	<script type="text/javascript" src="javascripts/vendor/rainbow-custom.min.js"></script>
+  	<script type="text/javascript" src="javascripts/vendor/jquery.anchor.js"></script>
+  	<script src="javascripts/initializers.js"></script>
+  	<!--GridTab-->
+  	<script src="js/gridtab.min.js"></script>
+    <script>
+      $(document).ready(function() {
+          $('.gridtab-1').gridtab({
+              grid: 6,
+              tabPadding: 0,
+              borderWidth: 10,
+              contentPadding: 40,
+              responsive: [{
+                  breakpoint: 991,
+                  settings: {
+                      grid: 4,
+                      contentPadding: 30
+                  }
+              }, {
+                  breakpoint: 767,
+                  settings: {
+                      grid: 3,
+                      contentPadding: 20
+                  }
+              }, {
+                  breakpoint: 520,
+                  settings: {
+                      grid: 2
+                  }
+              }]
+          });
+      });
+    </script>
+</body>
+</html>
